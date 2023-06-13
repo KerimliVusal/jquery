@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="code.jquery.com_jquery-3.7.0.min.js"></script>
+</head>
+<body>
+    <div id="dynamic-form"></div>
+    <button id="add-field">Add Field</button>
+  
+    <script>
+      $(document).ready(function() {
+        let fields = [];
+  
+        $('#add-field').click(function() {
+          const newField = {
+            label: '',
+            placeholder: '',
+            inputType: 'text'
+          };
+          fields.push(newField);
+          renderFields();
+        });
+  
+        $(document).on('change', '.field-input', function() {
+          const index = $(this).data('index');
+          const name = $(this).data('name');
+          const value = $(this).val();
+          fields[index][name] = value;
+        });
+  
+        function renderFields() {
+          $('#dynamic-form').empty();
+          fields.forEach(function(field, index) {
+            const fieldHtml = `
+              <div>
+                <label>
+                  Label:
+                  <input
+                    type="text"
+                    class="field-input"
+                    data-index="${index}"
+                    data-name="label"
+                    value="${field.label}"
+                  />
+                </label>
+                <br />
+                <label>
+                  Placeholder:
+                  <input
+                    type="text"
+                    class="field-input"
+                    data-index="${index}"
+                    data-name="placeholder"
+                    value="${field.placeholder}"
+                  />
+                </label>
+                <br />
+                <label>
+                  Input Type:
+                  <select
+                    class="field-input"
+                    data-index="${index}"
+                    data-name="inputType"
+                  >
+                    <option value="text" ${field.inputType === 'text' ? 'selected' : ''}>Text</option>
+                    <option value="number" ${field.inputType === 'number' ? 'selected' : ''}>Number</option>
+                    <option value="email" ${field.inputType === 'email' ? 'selected' : ''}>Email</option>
+                  </select>
+                </label>
+                <hr />
+              </div>
+            `;
+            $('#dynamic-form').append(fieldHtml);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
